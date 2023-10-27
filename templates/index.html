@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>HỎI ĐÁP LUẬT GIAO THÔNG CHO XE MÁY</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            align-items: center;
+            min-height: 100vh;
+        }
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #333;
+            color: #fff;
+            padding: 5px;
+            text-align: center;
+        }
+        #questionAnswerContainer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100%;
+        }
+        #answerContainer {
+            width: 100%;
+        }
+        #answerHeading {
+            background-color: #f0f0f0;
+            padding: 3px;
+            box-sizing: border-box;
+        }
+        #answerDisplay {
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            padding: 20px;
+            min-height: 100vh;
+            width: 100vw;
+            box-sizing: border-box;
+            font-size: large;
+        }
+        #questionContainer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #fff;
+            box-sizing: border-box;
+            padding-left: 100px;
+            padding-right: 100px;
+            padding-bottom: 20px;
+        }
+        #questionInput {
+            width: 100%;
+            padding: 10px;
+            padding-right: 40px;
+            box-sizing: border-box;
+            resize: none;
+            overflow: hidden;
+            max-height: 200px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+            border: 1px solid #ccc;
+            line-height: 30px;
+            border-radius: 10px;
+            font-size: large;
+        }
+        #sendIcon {
+            position: absolute;
+            bottom: 37px;
+            right: 112px;
+            cursor: pointer;
+            font-size: 24px;
+            color: #333;
+        }
+        #spinner {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 50px;
+            color: #333;
+            display: none; /* Ẩn spinner khi trang tải */
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>HỎI ĐÁP LUẬT GIAO THÔNG</h1>
+    </header>
+
+    <div id="questionAnswerContainer">
+        <div id="answerContainer">
+            <div id="answerHeading">
+                <h2>Đây là Tiêu Đề Câu Trả Lời</h2>
+            </div>
+            <div id="answerDisplay"></div>
+        </div>
+    </div>
+
+    <div id="questionContainer">
+        <textarea id="questionInput" rows="1" placeholder="Nhập câu hỏi vào đây"></textarea>
+        <span id="sendIcon" class="fa fa-paper-plane" onclick="showAnswer()"></span>
+    </div>
+
+    <!-- Spinner -->
+    <div id="spinner" class="fa fa-spinner fa-spin"></div>
+
+    <script>
+        function showAnswer() {
+            var question = document.getElementById("questionInput").value;
+            document.getElementById("spinner").style.display = "block"; // Hiển thị spinner
+            document.getElementById("answerDisplay").innerHTML = ""; 
+    
+            fetch('/get-answer', {
+                method: 'POST',
+                body: JSON.stringify({ query: question }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("answerDisplay").innerHTML = data.answer;
+                document.getElementById("spinner").style.display = "none"; // Ẩn spinner
+            })
+            .catch((error) => {
+                document.getElementById("answerDisplay").innerHTML = "Lỗi khi lấy câu trả lời.";
+                document.getElementById("spinner").style.display = "none"; // Ẩn spinner
+                console.error('Error:', error);
+            });
+        }
+    </script>
+    
+    <script>
+        document.getElementById('questionInput').addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        });
+    </script>
+
+</body>
+</html>

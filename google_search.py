@@ -5,7 +5,7 @@ import re
 import os
 import pandas as pd
 
-def google_search(query, api_key, cse_id, num=3):
+def google_search(query, api_key, cse_id, num=2):
     try:
         url = f"https://www.googleapis.com/customsearch/v1?q={query}&key={api_key}&cx={cse_id}&num={num}"
         response = requests.get(url)

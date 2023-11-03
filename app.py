@@ -43,7 +43,6 @@ def get_answer():
             # Tách context ra thành các câu bằng tiếng Việt
             sentences = sent_tokenize(context)
 
-            # ... (phần còn lại của mã không thay đổi)
             # Ghép các câu lại cho đến khi tổng số token đạt gần 512
             context_segments = []
             segment = ""
@@ -81,7 +80,7 @@ def get_answer():
                     print('================================================================')
 
                 elapsed_time = time.time() - start_time
-                if elapsed_time > 20:
+                if elapsed_time > 10:
                     print("Đã quá 20 giây! Trả về câu trả lời tốt nhất cho đến nay.")
                     return jsonify({'answer': best_answer if best_answer else "Không tìm thấy câu trả lời."})
 
